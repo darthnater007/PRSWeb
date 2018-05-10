@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import com.prs.business.purchaserequest.PurchaseRequest;
 import com.prs.business.purchaserequest.PurchaseRequestRepository;
 import com.prs.util.PRSMaintenanceReturn;
 
+@CrossOrigin
 @Controller    
 @RequestMapping(path="/PurchaseRequests")
 public class PurchaseRequestController extends BaseController{
@@ -36,21 +38,24 @@ public class PurchaseRequestController extends BaseController{
 	}
 
 	@PostMapping(path="/Add") 
-	public @ResponseBody PRSMaintenanceReturn addNewPurchaseRequest (@RequestBody PurchaseRequest purchaserequest) {
+	public @ResponseBody int addNewPurchaseRequest (@RequestBody PurchaseRequest purchaserequest) {
 
 		try {
 			Timestamp ts = new Timestamp(System.currentTimeMillis());
 			purchaserequest.setSubmittedDate(ts);
 			purchaserequest.setStatus(PurchaseRequest.STATUS_NEW);
 			purchaseRequestRepository.save(purchaserequest);
-			return PRSMaintenanceReturn.getMaintReturn(purchaserequest);
+			PRSMaintenanceReturn.getMaintReturn(purchaserequest);
+			return purchaserequest.getId();
 		}
 		catch (DataIntegrityViolationException dive) {
-			return PRSMaintenanceReturn.getMaintReturnError(purchaserequest, dive.getRootCause().toString());
+			PRSMaintenanceReturn.getMaintReturnError(purchaserequest, dive.getRootCause().toString());
+			return purchaserequest.getId();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			return PRSMaintenanceReturn.getMaintReturnError(purchaserequest, e.getMessage());
+			PRSMaintenanceReturn.getMaintReturnError(purchaserequest, e.getMessage());
+			return purchaserequest.getId();
 		}
 	}
 
@@ -70,7 +75,6 @@ public class PurchaseRequestController extends BaseController{
 		catch (Exception e) {
 			return PRSMaintenanceReturn.getMaintReturnError(purchaseRequest, e.toString());
 		}
-
 	}
 
 	@PostMapping(path="/Change") 
@@ -85,7 +89,36 @@ public class PurchaseRequestController extends BaseController{
 		catch (Exception e) {
 			return PRSMaintenanceReturn.getMaintReturnError(purchaseRequest, e.toString());
 		}
-
+	}
+	
+	@PostMapping(path="/Approve") 
+	public @ResponseBody PRSMaintenanceReturn approvePurchaseRequest (@RequestBody PurchaseRequest purchaseRequest) {
+		try {
+			purchaseRequest.setStatus(PurchaseRequest.STATUS_APPROVED);
+			purchaseRequestRepository.save(purchaseRequest);
+			return PRSMaintenanceReturn.getMaintReturn(purchaseRequest);
+		}
+		catch (DataIntegrityViolationException dive) {
+			return PRSMaintenanceReturn.getMaintReturnError(purchaseRequest, dive.getRootCause().toString());
+		}
+		catch (Exception e) {
+			return PRSMaintenanceReturn.getMaintReturnError(purchaseRequest, e.toString());
+		}
+	}
+	
+	@PostMapping(path="/Reject") 
+	public @ResponseBody PRSMaintenanceReturn rejectPurchaseRequest (@RequestBody PurchaseRequest purchaseRequest) {
+		try {
+			purchaseRequest.setStatus(PurchaseRequest.STATUS_REJECTED);
+			purchaseRequestRepository.save(purchaseRequest);
+			return PRSMaintenanceReturn.getMaintReturn(purchaseRequest);
+		}
+		catch (DataIntegrityViolationException dive) {
+			return PRSMaintenanceReturn.getMaintReturnError(purchaseRequest, dive.getRootCause().toString());
+		}
+		catch (Exception e) {
+			return PRSMaintenanceReturn.getMaintReturnError(purchaseRequest, e.toString());
+		}
 	}
 
 	@PostMapping(path = "/Submit")
@@ -112,8 +145,8 @@ public class PurchaseRequestController extends BaseController{
 	}
 	
 	@GetMapping(path = "/GetRequestReview")
-	public @ResponseBody Iterable<PurchaseRequest> getRequestReview(@RequestParam int id){
-		return purchaseRequestRepository.findAllByUserIdNot(id);
+	public @ResponseBody Iterable<PurchaseRequest> getRequestReview(@RequestParam int id, @RequestParam String status){
+		return purchaseRequestRepository.findAllByUserIdNotAndStatus(id, status);
 	}
 	
 }

@@ -43,11 +43,11 @@ public class PurchaseRequest {
 		
 	}
 	
-	public PurchaseRequest(int iD, User user, String description, String justification, Date dateNeeded,
+	public PurchaseRequest(int id, User user, String description, String justification, Date dateNeeded,
 			String deliveryMode, String status, double total, Timestamp submittedDate,
 			String reasonForRejection) {
 		super();
-		id = iD;
+		this.id = id;
 		this.user = user;
 		this.description = description;
 		this.justification = justification;
@@ -81,8 +81,8 @@ public class PurchaseRequest {
 	public int getId() {
 		return id;
 	}
-	public void setId(int iD) {
-		id = iD;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public User getUser() {
 		return user;

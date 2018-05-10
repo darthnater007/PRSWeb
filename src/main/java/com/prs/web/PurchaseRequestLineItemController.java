@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import com.prs.business.purchaserequest.PurchaseRequestLineItemRepository;
 import com.prs.business.purchaserequest.PurchaseRequestRepository;
 import com.prs.util.PRSMaintenanceReturn;
 
+@CrossOrigin
 @Controller    
 @RequestMapping(path="/PurchaseRequestLineItems")
 public class PurchaseRequestLineItemController extends BaseController{
@@ -48,6 +50,7 @@ public class PurchaseRequestLineItemController extends BaseController{
 	
 	@PostMapping(path="/Add") 
 	public @ResponseBody PRSMaintenanceReturn addNewPurchaseRequestLineItem (@RequestBody PurchaseRequestLineItem purchaseRequestLineItem) {
+		System.out.println(purchaseRequestLineItem.toString());
 		try {
 			purchaseRequestLineItemRepository.save(purchaseRequestLineItem);
 			updatePRTotal(purchaseRequestLineItem);

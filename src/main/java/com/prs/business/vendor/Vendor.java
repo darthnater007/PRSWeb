@@ -27,7 +27,7 @@ public class Vendor {
 		}
 
 		public Vendor(int id, String code, String name, String address, String city, String state, String zip,
-				String phone, String email, boolean preapproved) {
+				String phoneNumber, String email, boolean preapproved) {
 			super();
 			this.id = id;
 			this.code = code;
@@ -36,12 +36,12 @@ public class Vendor {
 			this.city = city;
 			this.state = state;
 			this.zip = zip;
-			this.phoneNumber = phone;
+			this.phoneNumber = phoneNumber;
 			this.email = email;
 			this.preapproved = preapproved;
 		}
 
-		public Vendor(String code, String name, String address, String city, String state, String zip, String phone,
+		public Vendor(String code, String name, String address, String city, String state, String zip, String phoneNumber,
 				String email, boolean preapproved) {
 			super();
 			this.code = code;
@@ -50,7 +50,7 @@ public class Vendor {
 			this.city = city;
 			this.state = state;
 			this.zip = zip;
-			this.phoneNumber = phone;
+			this.phoneNumber = phoneNumber;
 			this.email = email;
 			this.preapproved = preapproved;
 		}
@@ -122,12 +122,12 @@ public class Vendor {
 			this.zip = zip;
 		}
 
-		public String getPhone() {
+		public String getPhoneNumber() {
 			return phoneNumber;
 		}
 
-		public void setPhone(String phone) {
-			this.phoneNumber = phone;
+		public void setPhoneNumber(String phoneNumber) {
+			this.phoneNumber = phoneNumber;
 		}
 
 		public String getEmail() {
